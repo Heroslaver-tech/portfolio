@@ -1,12 +1,14 @@
 import { createRoot } from "react-dom/client";
+import { Canvas } from "@react-three/fiber";
 import Experience from "./Experience";
 import './styles.css'
 
 const root = createRoot(document.getElementById("root"));
 
 root.render(
-  <Experience
-    title={"PortFolio - Sebastian Peñaranda"}
-    info={"Web 3D developer"}
-  />
+  <Canvas
+    camera={{position:[2, 0, 5]}}
+    >
+    <Experience/>
+  </Canvas>
 );
