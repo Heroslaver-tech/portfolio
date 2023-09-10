@@ -6,6 +6,7 @@
     position:absolute;
     z-index: 1;
     padding: 0 8rem;
+    pointer-events: none;
 }
 
 .div-card {  
@@ -22,6 +23,7 @@
     border-right: 8px solid #8a1adc;
     z-index: 2;
     padding:2rem;
+    pointer-events: all;
 }
 
 .info-name {
