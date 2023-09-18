@@ -1,5 +1,4 @@
 import { useHelper } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { useMemo, useRef } from "react";
 import {
@@ -15,13 +14,7 @@ const Lights = () => {
   const pointLightRef3 = useRef();
   const pointLightRef4 = useRef();
   const spotLightRef = useRef();
-  // const targetRef = useRef();
 
-  
-
-  // useFrame(() => {
-  //   spotLightRef.current.target.position.set(4, 1, 0);
-  // });
   // useHelper(hemisphereLightRef, HemisphereLightHelper);
   // useHelper(pointLightRef1, PointLightHelper, 1, "hotpink");
   // useHelper(pointLightRef2, PointLightHelper, 1, "hotpink");
@@ -30,11 +23,10 @@ const Lights = () => {
   // useHelper(directionalLightRef, DirectionalLightHelper);
   // useHelper(spotLightRef, SpotLightHelper);
 
-  
-
   return (
     <>
       <ambientLight intensity={0.2} />
+
       {/* <directionalLight
         ref={directionalLightRef}
         position={[10, 10, 5]}
@@ -69,7 +61,7 @@ const Lights = () => {
         color={"white"}
         castShadow
       />
-      
+
       {/* 
       <hemisphereLight
         ref={hemisphereLightRef}
