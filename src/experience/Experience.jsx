@@ -1,123 +1,207 @@
-//React
-import { useRef } from "react";
-
 //Drei
-import { EnvironmentMap, OrbitControls, Sparkles, useTexture } from "@react-three/drei";
+import {
+    OrbitControls,
+    Sparkles,
+    Stars
+} from "@react-three/drei";
 
 //React Three fiber
 import { useFrame } from "@react-three/fiber";
 
+//React
+import { useRef, useState, useEffect } from "react";
+
 //images and model
-import Beast from "../world/Beast";
+import ButtonText from "../world/ButtonText";
+import Button from "../world/Buttons";
+import Wall from "../world/Wall";
+import Floor from "../world/Floor";
+import Xander from "../world/Xander";
 import Lights from "../world/Lights";
-import Environments from "../world/Environment";
+import PictureFrame from "../world/PictureFrame";
 import { Perf } from "r3f-perf";
+import CardText from "../world/CardText";
+import { Physics, RigidBody } from "@react-three/rapier";
 
 const Experience = () => {
-  const coneRef = useRef();
-  const torusRef = useRef();
-  const matCap = useTexture("/assets/matcaps/metallic.png");
-  const PATH = '/assets/textures/wood-floor/';
-  const PATH2 = '/assets/textures/leather/';
-  
-  const propsTextureFloor = useTexture({
-    map: PATH + 'wood_floor_deck_diff_2k.jpg',
-    normalMap: PATH + 'wood_floor_deck_nor_gl_2k.jpg',
-    roughnessMap: PATH + 'wood_floor_deck_rough_2k.jpg',
-    aoMap: PATH + 'wood_floor_deck_ao_2k.jpg',
-    displacementMap: PATH + 'wood_floor_deck_disp_2k.jpg'
-  })
+    const frameRef = useRef();
+    const ballRef1 = useRef();
+    const ballRef2 = useRef();
+    const ballRef3 = useRef();
+    const ballRef4 = useRef();
+    const ballRef5 = useRef();
+    const ballRef6 = useRef();
+    const [miBooleano, setMiBooleano] = useState(false);
+    const [miTitulo, setTitulo] = useState("Sebastián Peñaranda Hurtado");
+    const [miDescription, setDescription] = useState("Systems engineer and 3D modeler");
+
+    const [play, setPlay] = useState(false);
+    const [hitSound] = useState(() => new Audio('/assets/sounds/hit.wav'))
+
+    const onHandleFrame = () => {
+        frameRef.current.wakeUp()
+        ballRef1.current.wakeUp()
+        ballRef2.current.wakeUp()
+        ballRef3.current.wakeUp()
+        ballRef4.current.wakeUp()
+        ballRef5.current.wakeUp()
+        ballRef6.current.wakeUp()
+
+        frameRef.current.applyImpulse({ x: 0, y: 10, z: 10 }, true);
+    }
+
+    const bouncingBall = (ref) => {
+        setPlay(true)
+        ref.current.applyTorqueImpulse({ x: 1 - (2 * Math.random()), y: 2 * Math.random(), z: 1 - (2 * Math.random()) }, true);
+    }
+
+    const manejarCambioBooleano = (nuevoValor) => {
+        setMiBooleano(nuevoValor);
+      };
+
+    useEffect(() => {
+        frameRef.current.sleep()
+        ballRef1.current.sleep()
+        ballRef2.current.sleep()
+        ballRef4.current.sleep()
+        ballRef5.current.sleep()
+        ballRef3.current.sleep()
+        ballRef6.current.sleep()
+    }, [])
+
+    useEffect(() => {
+        if (play) {
+            hitSound.currentTime = 0
+            hitSound.volume = Math.random()
+            hitSound.play();
+        }
+    }, [play])
+
+    useEffect(() => {
+        if (miBooleano) {
+            setTitulo("Sebastián Peñaranda Hurtado")
+            setDescription("Systems engineering student with experience as a Web Page Monitor at Universidad del Valle. Currently in my seventh semester.")
+        }
+    }, [miBooleano])
+    return (
+        <>
+            <CardText title={miTitulo} description={miDescription}></CardText>
+            <Stars factor={2} />
+            <OrbitControls 
+                enableZoom={false}
+                enablePan={false}
+                enableRotate={false}
+                // rotateSpeed={0.5}
+                // maxPolarAngle={Math.PI / 2}
+                // minPolarAngle={Math.PI / 3}
+                // maxAzimuthAngle={Math.PI / 4}
+                // minAzimuthAngle={-Math.PI / 4}
+                target={[5, 1, 0]} 
+            />
+            <Lights />
+            {/* <Perf /> */}
+            <Sparkles
+                position={[14, 5, -8]}
+                color="gray"
+                count={100}
+                size={4}
+                fade={false}
+                speed={0.5}
+                scale={20}
+                castShadow
+            />
+            <Physics gravity={[0, -9.8, 0]}>
+                <RigidBody colliders={"trimesh"} type="fixed">
+                    <Xander position={[14, -0.6, -5]} scale={14} castShadow />
+                </RigidBody>
+
+                <RigidBody ref={frameRef} colliders={"cuboid"} position={[20, 5, -18]}  >
+                    <PictureFrame scale={2} onClick={onHandleFrame}></PictureFrame>
+                </RigidBody>
+                <group position={[0, 4, 0]}>
+                    <RigidBody ref={ballRef1} colliders={"ball"} position={[6, 20, -2]} gravityScale={1} restitution={1} onCollisionEnter={() => bouncingBall(ballRef1)} onCollisionExit={() => setPlay(false)}>
+                        <mesh scale={0.5} castShadow>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="red" />
+                        </mesh>
+                    </RigidBody>
+                    <RigidBody ref={ballRef2} colliders={"ball"} position={[10, 18, -5]} gravityScale={1} restitution={1.2} onCollisionEnter={() => bouncingBall(ballRef2)} onCollisionExit={() => setPlay(false)}>
+                        <mesh scale={0.5} castShadow>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="blue" />
+                        </mesh>
+                    </RigidBody>
+                    <RigidBody ref={ballRef3} colliders={"ball"} position={[15, 22, -2]} gravityScale={1} restitution={1.3} onCollisionEnter={() => bouncingBall(ballRef3)} onCollisionExit={() => setPlay(false)}>
+                        <mesh scale={0.5} castShadow>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="yellow" />
+                        </mesh>
+                    </RigidBody>
+                    <RigidBody ref={ballRef4} colliders={"ball"} position={[19, 18, -7]} gravityScale={1} restitution={1.5} onCollisionEnter={() => bouncingBall(ballRef4)} onCollisionExit={() => setPlay(false)}>
+                        <mesh scale={0.5} castShadow>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="purple" />
+                        </mesh>
+                    </RigidBody>
+                    <RigidBody ref={ballRef5} colliders={"ball"} position={[4, 17, -15]} gravityScale={1} restitution={0.8} onCollisionEnter={() => bouncingBall(ballRef5)} onCollisionExit={() => setPlay(false)}>
+                        <mesh scale={0.5} castShadow>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="green" />
+                        </mesh>
+                    </RigidBody>
+                    <RigidBody ref={ballRef6} colliders={"ball"} position={[20, 21, -10]} gravityScale={1} restitution={1} onCollisionEnter={() => bouncingBall(ballRef6)} onCollisionExit={() => setPlay(false)}>
+                        <mesh scale={0.5} castShadow>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="brown" />
+                        </mesh>
+                    </RigidBody>
+                </group>
+                <group>
+                    <RigidBody colliders={"hull"}>
+                        <Floor
+                            position={[14, -0.5, -6]}
+                            rotation-x={-Math.PI / 2}
+                            receiveShadow
+                        />
+                    </RigidBody>
+                    <RigidBody colliders={"hull"}>
+                        <Wall position={[14, 7, -18.5]} receiveShadow />
+                    </RigidBody>
+                    <RigidBody colliders={"hull"}>
+                        <Wall
+                            position={[1.5, 7, -6]}
+                            rotation-y={Math.PI / 2}
+                            receiveShadow
+                        />
+                    </RigidBody>
+                </group>
+            </Physics>
 
 
-  
-  const propsTextureFloor2 = useTexture({
-    map: PATH + 'wood_floor_deck_diff_2k.jpg',
-    normalMap: PATH + 'wood_floor_deck_nor_gl_2k.jpg',
-    roughnessMap: PATH + 'wood_floor_deck_rough_2k.jpg',
-    aoMap: PATH + 'wood_floor_deck_ao_2k.jpg',
-  })
+            <mesh position={[1.5, -0.5, -6]} scale={1} receiveShadow>
+                <boxGeometry args={[0.5, 0.5, 25]} />
+                <meshStandardMaterial receiveShadow color={'#38100f'} />
+            </mesh>
 
-  const propsTextureWall = useTexture({
-    map: PATH2 + 'leather_white_diff_2k.jpg',
-    normalMap: PATH2 + 'leather_white_nor_dx_2k.jpg',
-    roughnessMap: PATH2 + 'leather_white_rough_2k.jpg',
-    aoMap: PATH2 + 'leather_white_ao_2k.jpg',
-  })
+            <mesh position={[14, -0.5, -18.5]} scale={1}>
+                <boxGeometry args={[25, 0.5, 0.5]} />
+                <meshStandardMaterial receiveShadow color={'#38100f'} />
+            </mesh>
 
-  useFrame((state, delta) => {
-    // coneRef.current.rotation.x = Math.sin(state.clock.getElapsedTime());
-    // coneRef.current.rotation.z += 1 * delta;
-    // coneRef.current.position.y = Math.sin(state.clock.getElapsedTime()) + 3;
-    // torusRef.current.position.y = Math.cos(state.clock.getElapsedTime()) + 4;
-  });
-
-  return (
-    <>
-      <OrbitControls makeDefault />
-      <Lights/>
-      <Environments/>
-      <Perf/>
-      <Sparkles
-            position={[4 , 3, -3]}
-            color="gray"
-            count={100}
-            size={5}
-            fade={false}
-            speed={0.5}
-            scale={10}
-        />
-      <Beast position={[4 , 0, -3]} rotation-y={Math.PI/3} scale={0.2} castShadow/>
-              
-      <mesh position={[10,-0.5, 6]} rotation-x={-Math.PI / 2} receiveShadow >
-       <planeGeometry attach="geometry" args={[40, 40, 1, 1]} />
-       <meshStandardMaterial {...propsTextureFloor}/>
-      </mesh>
-
-      <mesh position={[10,15, 6]}rotation-x={Math.PI / 2} receiveShadow>
-       <planeGeometry attach="geometry" args={[40, 40, 1, 1]} />
-       <meshStandardMaterial {...propsTextureWall} />
-      </mesh>
-
-      <mesh position={[10, 5 ,-14]} receiveShadow>
-       <planeGeometry attach="geometry" args={[40, 20, 1, 1]} />
-       <meshStandardMaterial {...propsTextureWall} />
-      </mesh>
-
-      <mesh position={[-10, 5 , 6]} rotation-y={Math.PI/2}>
-       <planeGeometry attach="geometry" args={[40, 20, 1, 1]} />
-       <meshStandardMaterial {...propsTextureWall} />
-      </mesh>
-
-      <mesh position={[-10, 0, 7]} scale={1} receiveShadow>
-        <boxGeometry args={[2, 2, 40]} />
-        <meshStandardMaterial {...propsTextureFloor2}  receiveShadow/>
-      </mesh>
-
-      <mesh position={[9, 0, -14]} scale={1} >
-        <boxGeometry args={[40, 2, 2]} />
-        <meshStandardMaterial {...propsTextureFloor2}  receiveShadow/>
-      </mesh>
-
-      <mesh position={[-10, 8, 0]} scale={2} receiveShadow>
-        <boxGeometry args={[1, 3, 6]} />
-        <meshLambertMaterial color={"white"} emissive={"black"} />
-      </mesh>
-      
-      {/* <mesh position={[5, 0, -2]} scale={2} castShadow >
-        <boxGeometry args={[1, 1, 1]} />
-        <meshLambertMaterial color={"#0d21dc"} emissive={"#0d21dc"} />
-      </mesh> */}
-
-      {/* <mesh ref={coneRef} position={[-2, 2, -6]} scale={2}>
-        <coneGeometry position={[1, 2, 5]} />
-        <meshToonMaterial color="#ed26df" />
-      </mesh>
-      <mesh ref={torusRef} position={[5, 1, -9]} scale={2}>
-        <torusGeometry />
-        <meshMatcapMaterial matcap={matCap}/>
-      </mesh> */}
-    </>
-  );
+            <Button position={[2, 10, 0]} scale={2} args={[0.5, 1, 3]} color={"#00ff28"} cambiarBooleano={manejarCambioBooleano}>
+                <ButtonText text="About Me" position={[0.3, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
+            </Button>
+            <Button position={[2, 10, -10]} scale={2} args={[0.5, 1, 3]} color={"#ff0303"} cambiarBooleano={manejarCambioBooleano}>
+                <ButtonText text="Skills" position={[0.3, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
+            </Button>
+            <Button position={[10, 10, -18]} scale={2} args={[3, 1, 0.5]} color={"#8400ff"} cambiarBooleano={manejarCambioBooleano}>
+                <ButtonText text="Projects" position={[0, 0, 0.3]} rotation={[0, 0, 0]} />
+            </Button>
+            <Button position={[20, 10, -18]} scale={2} args={[3, 1, 0.5]} color={"#00fff6"} cambiarBooleano={manejarCambioBooleano}>
+                <ButtonText text="Contact Me" position={[0, 0, 0.3]} rotation={[0, 0, 0]} />
+            </Button>
+        </>
+    );
 };
 
 export default Experience;

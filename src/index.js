@@ -7,15 +7,16 @@ import Info from "./info/Info";
 
 const root = createRoot(document.getElementById("root"));
   const cameraSettings = {
-    position: [25, 5 , 20],
-    fov: 35 
+    position: [40, 20, 25],
+    fov: 45,
   }
 root.render(
   <>
-  <Info name={"Sebastian Peñaranda Hurtado"} title={"Ingeniero de Sistemas"}/>
+  {/* <Info name={"Sebastian Peñaranda Hurtado"} title={"Ingeniero de Sistemas"}/> */}
   <Canvas
     camera={cameraSettings}
     shadows
+    style={{ background: '#0a0a0a' }}
     >
     <Experience/>
   </Canvas>

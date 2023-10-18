@@ -5,7 +5,7 @@
     height: 100%;
     position:absolute;
     z-index: 1;
-    padding: 0 8rem;
+    margin-left: 8rem;
     pointer-events: none;
 }
 
@@ -24,14 +24,5 @@
     z-index: 2;
     padding:2rem;
     pointer-events: all;
-}
-
-.info-name {
-    color:#860a06;
-    font-size: 35px;
-}
-
-.info-title {
-    color:#0D0D0D;
-    font-size: 30px;
+    user-select: none;
 }

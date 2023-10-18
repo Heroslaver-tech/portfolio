@@ -14,6 +14,9 @@ const Lights = () => {
   const pointLightRef3 = useRef();
   const pointLightRef4 = useRef();
   const spotLightRef = useRef();
+  // const directionalLightRef = useRef();
+  
+  // const hemisphereLightRef =useRef();
 
   // useHelper(hemisphereLightRef, HemisphereLightHelper);
   // useHelper(pointLightRef1, PointLightHelper, 1, "hotpink");
@@ -25,49 +28,50 @@ const Lights = () => {
 
   return (
     <>
-      <ambientLight intensity={0.2} />
+      <ambientLight intensity={0.3} />
 
       {/* <directionalLight
         ref={directionalLightRef}
         position={[10, 10, 5]}
-        intensity={1}
+        intensity={0.5}
       /> */}
 
       <pointLight
         ref={pointLightRef1}
-        position={[-8, 10, -4]}
-        intensity={20}
-        color={"white"}
+        position={[7, 10, 0]}
+        intensity={50}
+        color={"#00ff28"}
         castShadow
       />
       <pointLight
         ref={pointLightRef2}
-        position={[-8, 6, -4]}
-        intensity={20}
-        color={"white"}
+        position={[7, 10, -10]}
+        intensity={50}
+        color={"#ff0303"}
         castShadow
       />
       <pointLight
         ref={pointLightRef3}
-        position={[-8, 6, 4]}
-        intensity={20}
-        color={"white"}
+        position={[10, 10, -13]}
+        intensity={50}
+        color={"#8400ff"}
         castShadow
       />
       <pointLight
         ref={pointLightRef4}
-        position={[-8, 10, 4]}
-        intensity={20}
-        color={"white"}
+        position={[20, 10, -13]}
+        intensity={50}
+        color={"#00fff6"}
         castShadow
       />
 
-      {/* 
-      <hemisphereLight
+      
+      {/* <hemisphereLight
         ref={hemisphereLightRef}
-        position={[2, -40 , -2]}
+        position={[16, 10 , -2]}
         intensity={1}
-        color={"blue"}
+        color={"gray"}
+        castShadow
       /> */}
     </>
   );
