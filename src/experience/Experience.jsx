@@ -9,7 +9,7 @@ import {
 import { useFrame } from "@react-three/fiber";
 
 //React
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, Suspense } from "react";
 
 //images and model
 import ButtonText from "../world/ButtonText";
@@ -83,6 +83,8 @@ const Experience = () => {
             setDescription("Systems engineering student with experience as a Web Page Monitor at Universidad del Valle. Currently in my seventh semester.")
         }
     }, [miBooleano])
+
+          
     return (
         <>
             <CardText title={miTitulo} description={miDescription}></CardText>
@@ -110,9 +112,11 @@ const Experience = () => {
                 scale={20}
                 castShadow
             />
-            <Physics gravity={[0, -9.8, 0]}>
-                <RigidBody colliders={"trimesh"} type="fixed">
-                    <Xander position={[14, -0.6, -5]} scale={14} castShadow />
+            <Physics  gravity={[0, -9.8, 0]}>
+                <RigidBody colliders={"hull"} type="fixed">
+                    <Suspense fallback={null}>
+                        <Xander position={[14, -0.6, -5]} scale={6} castShadow />
+                    </Suspense>
                 </RigidBody>
 
                 <RigidBody ref={frameRef} colliders={"cuboid"} position={[20, 5, -18]}  >
